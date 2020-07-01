@@ -449,7 +449,10 @@ class MentionsInput extends React.Component {
 
   // Handle input element's change event
   handleChange = (ev) => {
-    isComposing = false
+
+    // fix IME Composing
+    // isComposing = false
+
     // if we are inside iframe, we need to find activeElement within its contentDocument
     const currentDocument =
       (document.activeElement && document.activeElement.contentDocument) ||
@@ -518,15 +521,15 @@ class MentionsInput extends React.Component {
   }
 
   // Handle input element's select event
-  handleSelect = (ev) => {
+  handleSelect = (ev) => {  
+    // do nothing while a IME composition session is active
+    if (isComposing) return
+
     // keep track of selection range / caret position
     this.setState({
       selectionStart: ev.target.selectionStart,
       selectionEnd: ev.target.selectionEnd,
     })
-
-    // do nothing while a IME composition session is active
-    if (isComposing) return
 
     // refresh suggestions queries
     const el = this.inputElement
